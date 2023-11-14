@@ -1,0 +1,4 @@
+airflow_env/
+*.pyc
+.DS_Store
+*.sql
