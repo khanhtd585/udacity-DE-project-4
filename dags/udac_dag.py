@@ -25,13 +25,13 @@ with DAG(
 ) as dag:
     start_operator = EmptyOperator(task_id='Begin_execution',  dag=dag)
 
-    create_table = CreateTableOperator(
-        task_id='Create_table',
-        dag=dag,
-        redshift_conn_id=redshift_conn_id,
-        aws_credentials=aws_credentials_id,
-        sql=SqlQueries.create_table
-    )
+    # create_table = CreateTableOperator(
+    #     task_id='Create_table',
+    #     dag=dag,
+    #     redshift_conn_id=redshift_conn_id,
+    #     aws_credentials=aws_credentials_id,
+    #     sql=SqlQueries.create_table
+    # )
 
     stage_events_to_redshift = StageToRedshiftOperator(
         task_id='Stage_events',
@@ -103,7 +103,7 @@ with DAG(
 
     end_operator = EmptyOperator(task_id='Stop_execution',  dag=dag)
 
-    start_operator >> create_table >> [stage_events_to_redshift, stage_songs_to_redshift] >> load_songplays_table
+    start_operator >> [stage_events_to_redshift, stage_songs_to_redshift] >> load_songplays_table
     load_songplays_table >> [load_user_dimension_table, load_song_dimension_table,  
                             load_artist_dimension_table, load_time_dimension_table] >> run_quality_checks
     run_quality_checks >> end_operator
